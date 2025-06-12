@@ -1,0 +1,107 @@
+.loginLayout {
+    min-height: 100vh;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .loginContent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  .loginContainer {
+    width: 100%;
+    max-width: 400px;
+  }
+  
+  .loginCard {
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(255, 255, 255, 0.95);
+  }
+  
+  .loginHeader {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .title {
+    font-size: 28px;
+    font-weight: 600;
+    color: #1890ff;
+    margin-bottom: 8px;
+    margin-top: 0;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 14px;
+    margin: 0;
+  }
+  
+  // 响应式设计
+  @media (max-width: 768px) {
+    .loginCard {
+      padding: 24px;
+      margin: 16px;
+    }
+    
+    .title {
+      font-size: 24px;
+    }
+    
+    .loginContainer {
+      max-width: 100%;
+    }
+  }
+  
+  // 表单项样式优化
+  :global(.ant-form-item) {
+    margin-bottom: 20px;
+  }
+
+  :global(.ant-btn-primary) {
+    height: 44px;
+    font-size: 16px;
+    border-radius: 6px;
+  }
+
+  :global(.ant-input-affix-wrapper) {
+    height: 44px;
+    border-radius: 6px;
+  }
+
+  // 输入框内文本垂直居中样式
+  :global(.ant-input-affix-wrapper) {
+    display: flex;
+    align-items: center;
+    height: 44px;
+  }
+
+  :global(.ant-input) {
+    height: 44px;
+    line-height: 44px;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
+
+  :global(.ant-input-password) {
+    height: 44px;
+  }
+
+  :global(.ant-input-password .ant-input) {
+    height: 44px;
+    line-height: 44px;
+    border: none;
+    box-shadow: none;
+    padding: 0;
+  }
