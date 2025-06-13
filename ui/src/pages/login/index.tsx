@@ -67,7 +67,7 @@ const LoginPage: React.FC = () => {
               >
                 <Input.Password
                   prefix={<LockOutlined />}
-                  placeholder="密码1"
+                  placeholder="密码"
                 />
               </Form.Item>
 
