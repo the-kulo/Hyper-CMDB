@@ -57,7 +57,6 @@ jobs:
     needs: [frontend]
     if: github.ref == 'refs/heads/main'
     
-    # 为部署作业添加特定权限
     permissions:
       contents: read
       pages: write
