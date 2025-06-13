@@ -8,6 +8,12 @@ on:
     branches: [ main ]
     paths: [ 'ui/**' ]
 
+# 添加权限配置
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 env:
   NODE_VERSION: '20'
 
@@ -51,24 +57,33 @@ jobs:
     needs: [frontend]
     if: github.ref == 'refs/heads/main'
     
+    # 为部署作业添加特定权限
     permissions:
       contents: read
       pages: write
       id-token: write
     
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
     - name: Download frontend artifact
       uses: actions/download-artifact@v4
       with:
         name: frontend-dist
         path: ui/dist
     
+    - name: Setup Pages
+      uses: actions/configure-pages@v3
+    
+    - name: Upload to GitHub Pages
+      uses: actions/upload-pages-artifact@v2
+      with:
+        path: ui/dist
+    
     - name: Deploy to GitHub Pages
-      uses: peaceiris/actions-gh-pages@v3
+      id: deployment
+      uses: actions/deploy-pages@v2
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: ui/dist
