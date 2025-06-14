@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Form, Input, Button, message, Layout } from 'antd'
+import { Card, Form, Input, Button, message, Layout, Divider } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useAuthStore } from '../../stores/authStore'
 import type { LoginRequest } from '../../types/auth'
@@ -24,6 +24,18 @@ const LoginPage: React.FC = () => {
     } finally {
       setLoading(false)
     }
+  }
+
+  // 处理注册页面跳转
+  const handleGoToRegister = () => {
+    // TODO: 路由跳转到注册页面
+    console.log('跳转到注册页面')
+  }
+
+  // 处理找回密码页面跳转
+  const handleGoToForgotPassword = () => {
+    // TODO: 路由跳转到找回密码页面
+    console.log('跳转到找回密码页面')
   }
 
   return (
@@ -80,16 +92,27 @@ const LoginPage: React.FC = () => {
                 >
                   登录
                 </Button>
-                <Button
-                  type="primary"
-                  htmlType="submit"
-                  loading={loading}
-                  block
-                >
-                  注册
-                </Button>
               </Form.Item>
             </Form>
+
+            {/* 注册和找回密码链接 */}
+            <Divider />
+            <div className={styles.authLinks}>
+              <Button 
+                type="link" 
+                onClick={handleGoToRegister}
+                className={styles.authLink}
+              >
+                立即注册
+              </Button>
+              <Button 
+                type="link" 
+                onClick={handleGoToForgotPassword}
+                className={styles.authLink}
+              >
+                忘记密码？
+              </Button>
+            </div>
           </Card>
         </div>
       </Content>
