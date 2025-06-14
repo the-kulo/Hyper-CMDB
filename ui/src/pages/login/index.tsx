@@ -102,14 +102,14 @@ const LoginPage: React.FC = () => {
                 onClick={handleGoToRegister}
                 className={styles.authLink}
               >
-                立即注册
+                立即注册 {'>'}
               </Button>
               <Button 
                 type="link" 
                 onClick={handleGoToForgotPassword}
                 className={styles.authLink}
               >
-                忘记密码
+                忘记密码 {'>'} 
               </Button>
             </div>
           </Card>
