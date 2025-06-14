@@ -78,7 +78,7 @@ const LoginPage: React.FC = () => {
                   loading={loading}
                   block
                 >
-                  登录1
+                  登录
                 </Button>
               </Form.Item>
             </Form>
