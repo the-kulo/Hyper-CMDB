@@ -80,6 +80,14 @@ const LoginPage: React.FC = () => {
                 >
                   登录
                 </Button>
+                <Button
+                  type="primary"
+                  htmlType="submit"
+                  loading={loading}
+                  block
+                >
+                  注册
+                </Button>
               </Form.Item>
             </Form>
           </Card>
