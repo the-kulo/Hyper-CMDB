@@ -46,7 +46,26 @@
     font-size: 14px;
     margin: 0;
   }
+
+  // 注册和找回密码链接样式
+  .authLinks {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 8px; 
+  }
   
+  .authLink {
+    padding: 0;
+    height: auto;
+    font-size: 14px;
+    color: #1890ff;
+    
+    &:hover {
+      color: #40a9ff;
+    }
+  }
+
   // 响应式设计
   @media (max-width: 768px) {
     .loginCard {
