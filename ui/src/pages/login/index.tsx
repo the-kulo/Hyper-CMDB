@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Card, Form, Input, Button, message, Layout, Divider } from 'antd'
+import { Card, Form, Input, Button, message, Layout } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { useAuthStore } from '../../stores/authStore'
 import type { LoginRequest } from '../../types/auth'
@@ -96,7 +96,6 @@ const LoginPage: React.FC = () => {
             </Form>
 
             {/* 注册和找回密码链接 */}
-            <Divider />
             <div className={styles.authLinks}>
               <Button 
                 type="link" 
@@ -110,7 +109,7 @@ const LoginPage: React.FC = () => {
                 onClick={handleGoToForgotPassword}
                 className={styles.authLink}
               >
-                忘记密码？
+                忘记密码
               </Button>
             </div>
           </Card>
