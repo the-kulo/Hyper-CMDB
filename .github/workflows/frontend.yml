@@ -38,16 +38,6 @@ jobs:
           echo "Build successful, files:"
           ls -la ui/dist/
 
-      - name: Debug secrets
-        env:
-          SERVER_HOST: ${{ secrets.SERVER_HOST }}
-          SERVER_USER: ${{ secrets.SERVER_USER }}
-          SERVER_PATH: ${{ secrets.SERVER_PATH }}
-        run: |
-          echo "Host: ${{ secrets.SERVER_HOST }}"
-          echo "User: ${{ secrets.SERVER_USER }}"
-          echo "Path: ${{ secrets.SERVER_PATH }}"
-
       # 部署到远程服务器
       - name: Deploy to server
         uses: appleboy/ssh-action@v1.0.3
