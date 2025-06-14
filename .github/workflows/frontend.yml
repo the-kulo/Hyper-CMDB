@@ -1,41 +1,111 @@
-name: Deploy Frontend
+name: Deploy Frontend to Server
 
 on:
   push:
-    branches: [ main ]
-    paths: [ 'ui/**' ]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
+    branches: [main]
+    paths: ["ui/**"]
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
+
     steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '20'
-        cache: 'npm'
-        cache-dependency-path: ui/package-lock.json
-    
-    - name: Install and Build
-      run: |
-        cd ui
-        npm ci
-        npm run build
-    
-    - name: Setup Pages
-      uses: actions/configure-pages@v3
-    
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: ui/dist
-    
-    - name: Deploy to GitHub Pages
-      uses: actions/deploy-pages@v2
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: ui/package-lock.json
+
+      - name: Install dependencies
+        working-directory: ./ui
+        run: npm ci
+
+      - name: Build frontend
+        working-directory: ./ui
+        run: npm run build
+
+      # 添加构建验证
+      - name: Verify build output
+        run: |
+          if [ ! -f "ui/dist/index.html" ]; then
+            echo "Build failed: index.html not found"
+            exit 1
+          fi
+          echo "Build successful, files:"
+          ls -la ui/dist/
+
+      # 部署到远程服务器
+      - name: Deploy to server
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            # 创建备份目录
+            mkdir -p ${{ secrets.SERVER_PATH }}/backup
+
+            # 备份当前版本（如果存在）
+            if [ -d "${{ secrets.SERVER_PATH }}/current" ]; then
+              mv ${{ secrets.SERVER_PATH }}/current ${{ secrets.SERVER_PATH }}/backup/$(date +%Y%m%d_%H%M%S)
+            fi
+
+            # 创建新的部署目录
+            mkdir -p ${{ secrets.SERVER_PATH }}/current
+
+      - name: Upload files to server
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          source: "ui/dist/*"
+          target: ${{ secrets.SERVER_PATH }}/current
+          strip_components: 2
+
+      # 部署后验证
+      - name: Verify deployment
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            if [ ! -f "${{ secrets.SERVER_PATH }}/current/index.html" ]; then
+              echo "Deployment failed: index.html not found on server"
+              exit 1
+            fi
+            echo "Deployment successful!"
+            echo "Files on server:"
+            ls -la ${{ secrets.SERVER_PATH }}/current/
+
+      # 回滚
+      # 在部署失败时自动回滚
+      - name: Rollback on failure
+        if: failure()
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USER }}
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          script: |
+            LATEST_BACKUP=$(ls -t ${{ secrets.SERVER_PATH }}/backup/ | head -1)
+            if [ -n "$LATEST_BACKUP" ]; then
+              rm -rf ${{ secrets.SERVER_PATH }}/current
+              mv ${{ secrets.SERVER_PATH }}/backup/$LATEST_BACKUP ${{ secrets.SERVER_PATH }}/current
+              echo "Rollback completed to $LATEST_BACKUP"
+            fi
+
+      # 监控
+      - name: Notify deployment result
+        if: always()
+        run: |
+          if [ "${{ job.status }}" = "success" ]; then
+            echo "✅ 部署成功到服务器 ${{ secrets.SERVER_HOST }}"
+          else
+            echo "❌ 部署失败，请检查日志"
+          fi
