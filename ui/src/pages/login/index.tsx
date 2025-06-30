@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import { Card, Form, Input, Button, message, Layout } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
+import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuthStore } from '../../stores/authStore'
 import type { LoginRequest } from '../../types/auth'
+import type { LocationState } from '../../types/router'
 import styles from './styles.module.less'
 
 const { Content } = Layout
@@ -11,6 +13,11 @@ const LoginPage: React.FC = () => {
   const [loading, setLoading] = useState(false)
   const { login } = useAuthStore()
   const [form] = Form.useForm()
+  const navigate = useNavigate()
+  const location = useLocation()
+  
+  // 获取重定向目标，默认为dashboard
+  const from = (location.state as LocationState)?.from || '/dashboard'
 
   // 处理登录提交
   const handleLogin = async (values: LoginRequest) => {
@@ -18,7 +25,9 @@ const LoginPage: React.FC = () => {
       setLoading(true)
       await login(values.username, values.password)
       message.success('登录成功！')
-       // 这里后续会添加路由跳转
+      
+      // 跳转到目标页面
+      navigate(from, { replace: true })
     } catch {
       message.error('登录失败，请检查用户名和密码')
     } finally {

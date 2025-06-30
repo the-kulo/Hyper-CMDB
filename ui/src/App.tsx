@@ -1,13 +1,18 @@
 import { ConfigProvider } from 'antd';
+import { RouterProvider } from 'react-router-dom';
 import zhCN from 'antd/locale/zh_CN';
-import Login from './pages/login';
+import router from './router';
+import AppInitializer from './components/AppInitializer';
+import './App.css';
 
 function App() {
   return (
     <ConfigProvider locale={zhCN}>
-      <div className="app">
-        <Login />
-      </div>
+      <AppInitializer>
+        <div className="App">
+          <RouterProvider router={router} />
+        </div>
+      </AppInitializer>
     </ConfigProvider>
   );
 }

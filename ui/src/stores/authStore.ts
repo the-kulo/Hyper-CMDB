@@ -8,9 +8,11 @@ interface AuthState {
   user: User | null;           // 当前登录用户信息
   token: string | null;        // 认证令牌
   isLoading: boolean;          // 加载状态
+  isAuthenticated: boolean;    // 认证状态
   login: (username: string, password: string) => Promise<void>;  // 登录方法
   logout: () => void;          // 登出方法
   setUser: (user: User) => void;  // 设置用户信息方法
+  initializeAuth: () => void;  // 初始化认证状态方法
 }
 
 // 创建Zustand状态管理store
@@ -20,6 +22,7 @@ export const useAuthStore = create<AuthState>()(persist(
     user: null,
     token: null,
     isLoading: false,
+    isAuthenticated: false,
 
     // 登录方法
     login: async (username: string, password: string) => {
@@ -29,7 +32,8 @@ export const useAuthStore = create<AuthState>()(persist(
         set({
           user: response.user,
           token: response.token,
-          isLoading: false
+          isLoading: false,
+          isAuthenticated: true
         });
         localStorage.setItem('token', response.token);
       } catch (error) {
@@ -40,12 +44,22 @@ export const useAuthStore = create<AuthState>()(persist(
 
     // 登出方法
     logout: () => {
-      set({ user: null, token: null });
+      set({ user: null, token: null, isAuthenticated: false });
       localStorage.removeItem('token');
     },
 
     // 设置用户信息方法
-    setUser: (user: User) => set({ user })
+    setUser: (user: User) => set({ user }),
+
+    // 初始化认证状态方法
+    initializeAuth: () => {
+      const token = localStorage.getItem('token');
+      if (token) {
+        // 如果有token，设置为已认证状态
+        // 实际项目中应该验证token有效性
+        set({ token, isAuthenticated: true });
+      }
+    }
   }),
   {
     name: 'auth-storage',
