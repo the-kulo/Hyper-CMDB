@@ -26,18 +26,6 @@ const LoginPage: React.FC = () => {
     }
   }
 
-  // 处理注册页面跳转
-  const handleGoToRegister = () => {
-    // TODO: 路由跳转到注册页面
-    console.log('跳转到注册页面')
-  }
-
-  // 处理找回密码页面跳转
-  const handleGoToForgotPassword = () => {
-    // TODO: 路由跳转到找回密码页面
-    console.log('跳转到找回密码页面')
-  }
-
   return (
     <Layout className={styles.loginLayout}>
       <Content className={styles.loginContent}>
@@ -94,24 +82,6 @@ const LoginPage: React.FC = () => {
                 </Button>
               </Form.Item>
             </Form>
-
-            {/* 注册和找回密码链接 */}
-            <div className={styles.authLinks}>
-              <Button 
-                type="link" 
-                onClick={handleGoToRegister}
-                className={styles.authLink}
-              >
-                立即注册 {'>'}
-              </Button>
-              <Button 
-                type="link" 
-                onClick={handleGoToForgotPassword}
-                className={styles.authLink}
-              >
-                忘记密码 {'>'} 
-              </Button>
-            </div>
           </Card>
         </div>
       </Content>
